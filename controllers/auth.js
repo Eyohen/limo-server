@@ -8,10 +8,10 @@ const jwt=require('jsonwebtoken')
 //REGISTER
 const register = async (req,res) => {
     try{
-        const {firstName,lastName,email,password} = req.body
+        const {firstName,email,password} = req.body
         const salt=await bcrypt.genSalt(10)
         const hashedPassword= await bcrypt.hashSync(password,salt)
-        const newUser=new User({firstName,lastName,email,password:hashedPassword})
+        const newUser=new User({firstName,email,password:hashedPassword})
         const savedUser=await newUser.save()
         res.status(200).json(savedUser)
 
@@ -57,11 +57,12 @@ const admin_login = async (req,res) => {
 const login = async (req,res) => {
 
     try{
-        const user=await User.findOne({email:req.body.email})
+        const user = await User.findOne({email:req.body.email})
        
         if(!user){
             return res.status(404).json("User not found!")
         }
+        
         const match=await bcrypt.compare(req.body.password,user.password)
         
         if(!match){

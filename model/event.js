@@ -5,15 +5,23 @@ const EventSchema = new mongoose.Schema({
         type:String,
         required:true,  
     },
+    description:{
+        type:String,
+        required:false,  
+    },
     city:{
         type:String,
-        required:true,  
+        required:false,  
     },
     
     centre:{
         type:String,
-        required:true,
+        required:false,
       
+    },
+    photo:{
+        type:String,
+        required:false,    
     },
     date:{
         type:Date,
@@ -21,7 +29,7 @@ const EventSchema = new mongoose.Schema({
     },
     time:{
         type:String,
-        required:true,  
+        required:false,  
     },
   
     // user: User,

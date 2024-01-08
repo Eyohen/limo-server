@@ -1,8 +1,8 @@
 const express=require('express')
 const router=express.Router()
-const {model: User }=require('../models/User')
 const bcrypt=require('bcrypt')
-const Apartment=require('../models/Apartment')
+// const User =require('../model/user')
+const {model: User} = require('../model/user')
 // const Comment=require('../models/Comment')
 const verifyToken = require('../verifyToken')
 
@@ -26,21 +26,21 @@ router.put("/:id",verifyToken,async (req,res)=>{
 
 
 //DELETE
-router.delete("/:id",verifyToken,async (req,res)=>{
-    try{
-        await User.findByIdAndDelete(req.params.id)
-        await Apartment.deleteMany({userId:req.params.id})
-        await Comment.deleteMany({userId:req.params.id})
-        res.status(200).json("User has been deleted!")
+// const deleteUser = async (req,res)=>{
+//     try{
+//         await User.findByIdAndDelete(req.params.id)
+//         await Apartment.deleteMany({userId:req.params.id})
+//         await Comment.deleteMany({userId:req.params.id})
+//         res.status(200).json("User has been deleted!")
 
-    }
-    catch(err){
-        res.status(500).json(err)
-    }
-})
+//     }
+//     catch(err){
+//         res.status(500).json(err)
+//     }
+// }
 
 //GET USERS
-router.get("/",async (req,res)=>{
+const getUsers = async (req,res)=>{
     const query=req.query
     
     try{
@@ -53,11 +53,11 @@ router.get("/",async (req,res)=>{
     catch(err){
         res.status(500).json(err)
     }
-})
+}
 
 
 //GET USER
-router.get("/:id",async (req,res)=>{
+const getUser = async (req,res) =>{
     try{
         const user=await User.findById(req.params.id)
         const {password,...info}=user._doc
@@ -66,7 +66,7 @@ router.get("/:id",async (req,res)=>{
     catch(err){
         res.status(500).json(err)
     }
-})
+}
 
 
-module.exports=router
+module.exports = {getUser, getUsers}

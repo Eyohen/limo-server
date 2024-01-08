@@ -1,6 +1,12 @@
-const {register, login} = require('../controllers/auth')
+const {getUser, getUsers} = require('../controllers/user')
+const verifyToken = require('../verifyToken')
+const express=require('express')
+const router = express.Router()
 
 
-router.post("/register",register)
-router.post("/login",login)
+router.get("/:id", verifyToken ,getUser)
+router.get("/", verifyToken ,  getUsers)
 
+
+
+module.exports = router
