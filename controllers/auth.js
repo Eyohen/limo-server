@@ -6,6 +6,7 @@ const jwt=require('jsonwebtoken')
 const Token = require("../model/token")
 const crypto = require("crypto")
 const sendEmail = require('../utils/sendEmail')
+const dotenv=require('dotenv')
 
 
 //REGISTER
@@ -81,7 +82,7 @@ const register = async (req, res) => {
       await token.save();
   
       // Send verification email
-      const link = `http://localhost:5000/api/users/confirm/${token.token}`;
+      const link = `${process.env.BASE_URL}/api/users/confirm/${token.token}`;
       await sendEmail(user.email, "Verify Email", link);
   
       // Respond to the client
