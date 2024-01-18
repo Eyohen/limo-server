@@ -10,10 +10,8 @@ const auth = require('./routes/auth')
 const reserve = require('./routes/reserve')
 const event = require('./routes/event')
 const user = require('./routes/user')
-// const apartmentRoute=require('./routes/apartments')
-// const estateRoute=require('./routes/estate')
-// const bookingRoute=require('./routes/booking')
-// const tenantRoute=require('./routes/tenant')
+const vehicle = require('./routes/vehicle')
+const contact = require('./routes/contact')
 const { request } = require('http')
 // const commentRoute=require('./routes/comments')
 
@@ -34,24 +32,17 @@ const connectDB=async()=>{
 dotenv.config()
 app.use(express.json())
 app.use("/images",express.static(path.join(__dirname,"/images")))
-// app.use(cors({origin:["http://localhost:5173","http://localhost:5174"],
-// credentials:true
-// }))
-// app.use(cors({origin:["https://recoaproject.vercel.app","http://localhost:5173"],
-// credentials:true
-// }))
+
 app.use(cors() )
 // app.use(cookieParser())
 app.use("/api/auth",auth)
 app.use("/api/reserves",reserve)
 app.use("/api/events", event)
 app.use("/api/users", user)
+app.use("/api/vehicles", vehicle)
+app.use("/api/contacts", contact)
 
-// app.use("/api/apartments",apartmentRoute)
-// app.use("/api/estates",estateRoute)
-// app.use("/api/bookings",bookingRoute)
-// app.use("/api/tenants",tenantRoute)
-// app.use("/api/comments",commentRoute)
+
 
 //image upload
 const storage=multer.diskStorage({

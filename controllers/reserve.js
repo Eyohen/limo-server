@@ -1,7 +1,7 @@
 
 const {model: User} = require('../model/user')
 // const bcrypt=require('bcrypt')
-// const Apartment=require('../models/Apartment')
+const Vehicle =require('../model/vehicle')
 const Reserve = require('../model/reserve')
 // const Comment=require('../models/Comment')
 const verifyToken = require('../verifyToken')
@@ -9,16 +9,23 @@ const verifyToken = require('../verifyToken')
 //CREATE Reserve
 const createReserve =  async (req,res) => {
     try{
+
+        const vehicle = await Vehicle.findById(req.body.vehicle)
         
         const user = await User.findById(req.userId)
-        const newReserve = new Reserve({...req.body, user: user})
+        const newReserve = new Reserve({...req.body, userId: user._id})
         
         const savedReserve = await newReserve.save()
+
+        vehicle.reserves = vehicle.reserves.concat(savedReserve)
+
+        await vehicle.save()
+         
         res.status(200).json(savedReserve)
     }
     catch(err){
         console.log(err.message)
-        res.status(500).json({message:"Reserve not made"})
+        res.status(500).json({message:"Reservation not made"})
     }
      
 }
@@ -54,8 +61,13 @@ const deleteReserve = async (req,res)=>{
 //GET Reserve DETAIL
 const getReserve = async (req,res)=>{
     try{
-        const reserve =await Reserve.findById(req.params.id).populate('user')
-        res.status(200).json(reserve)
+        const reserve =await Reserve.findById(req.params.id).populate('vehicle')
+        const user = await User.findById(reserve.userId)
+        console.log(reserve)
+        res.status(200).json({
+            user,
+            reserve
+        })
        
     }
     catch(err){
@@ -69,9 +81,18 @@ const getReserves = async (req,res)=>{
     
     try{
         const searchFilter={
-            title:{$regex:query.search, $options:"i"}
+            title:{$regex:query.search, $options:"i"} }
+        const _reserve = await Reserve.find(query.search?searchFilter:null).populate('vehicle')
+        const reserve = []
+        for(let i = 0 ; i < _reserve.length ; i ++){
+            const user = await User.findById(_reserve[i].userId)
+          
+            reserve.push({
+                ..._reserve[i]._doc,
+                user
+            })
         }
-        const reserve = await Reserve.find(query.search?searchFilter:null)
+        
         res.status(200).json(reserve)
     }
     catch(err){

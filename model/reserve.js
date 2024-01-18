@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const {schema: User}=require('./user')
-const RequestSchema=new mongoose.Schema({
+const ReserveSchema=new mongoose.Schema({
     pickUp:{
         type:String,
         required:true,  
@@ -13,21 +13,24 @@ const RequestSchema=new mongoose.Schema({
     time:{
         type:String,
         required:true,
-      
     },
     date:{
         type:Date,
         required:false,
     },
-    vehicle:{
-        type:String,
-        required:true,  
-    },
+    vehicle: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vehicle',
+        required: true
+      },
     passengers:{
         type:Number,
         required:true,  
     },
-    
+    phone:{
+        type:Number,
+        required:false,  
+    },
     airport:{
         type:String,
         required:false,
@@ -37,11 +40,18 @@ const RequestSchema=new mongoose.Schema({
         type:String,
         required:false,
     },
-    user: User,
+    desc:{
+        type:String,
+        required:false,
+    },
+    userId: {
+        type:String,
+        required:false,
+    }
    
   
 
 },{timestamps:true})
 
-module.exports=mongoose.model("Request",RequestSchema)
+module.exports=mongoose.model("Reserve",ReserveSchema)
 
